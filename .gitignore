@@ -1,0 +1,14 @@
+.env
+.env.*
+!.env.example
+FKart_Credentials.json
+reports/
+diagnostics/
+run.log
+run_report.json
+*.xlsx
+*.corrupt-*
+__pycache__/
+.pytest_cache/
+.venv/
+.chrome-profile/

@@ -1,0 +1,107 @@
+{
+  "_comment": "Edit this file when Flipkart changes its page. Reviews use the page text structure and cursor-based infinite scroll; numbered ?page=N URLs are not used. Collection stops at the verified date boundary or is reported Partial if scrolling cannot establish coverage. FULL COVERAGE: all topics x all sorts are visited; only reviews inside the requested date range are kept.",
+  "settings": {
+    "urls_csv": "Flipkart_Hearables_URLs.csv",
+    "output_dir": "reports",
+    "diagnostics_dir": "diagnostics",
+    "max_pages": 0,
+    "chrome_profile_dir": ".chrome-profile-review-diagnostic",
+    "review_sort_orders": [
+      "MOST_RECENT",
+      "MOST_HELPFUL",
+      "POSITIVE_FIRST",
+      "NEGATIVE_FIRST"
+    ],
+    "headless": false,
+    "page_wait_seconds": 20,
+    "retries": 2,
+    "login_enabled": true,
+    "keyword_feedback_enabled": true,
+    "max_keyword_chips": 8,
+    "negative_ratings": [
+      1,
+      2,
+      3
+    ],
+    "diagnostics_keep_days": 7,
+    "max_reviews": 0,
+    "page_size": 10,
+    "max_scroll_rounds": 0,
+    "scroll_patience": 3,
+    "scroll_wait_seconds": 10,
+    "start_date": "",
+    "end_date": "",
+    "date_stop_streak": 10,
+    "include_uncertain_dates": false,
+    "login_required": false,
+    "login_url": "https://www.flipkart.com/account/login",
+    "login_verify_url": "https://www.flipkart.com/account/?rd=0&link=home_account",
+    "login_success_markers": [
+      "profile information",
+      "manage addresses",
+      "my orders",
+      "logout"
+    ],
+    "login_step_timeout_seconds": 30,
+    "login_gmail_wait_seconds": 60,
+    "login_resend_wait_seconds": 45,
+    "login_call_answer_wait_seconds": 30,
+    "login_manual_wait_seconds": 240,
+    "otp_sender_domains": [
+      "flipkart.com"
+    ],
+    "multi_section_enabled": true,
+    "multi_section_max": 0,
+    "visit_all_sections": true,
+    "section_sorts": [
+      "MOST_RECENT",
+      "MOST_HELPFUL",
+      "POSITIVE_FIRST",
+      "NEGATIVE_FIRST"
+    ],
+    "run_time_budget_seconds": 0,
+    "max_section_seconds": 0,
+    "end_of_list_quiet_seconds": 4,
+    "fast_mode": false,
+    "extra_sort_topics": [
+      "Overall"
+    ],
+    "extra_sort_max_rounds": 0,
+    "section_retries": 2,
+    "list_recoveries": 2,
+    "parallel_workers": 4,
+    "block_images": true
+  },
+  "selectors": {
+    "review_block": [
+      "div.EKFha-"
+    ],
+    "rating": [
+      ".XQDdHH"
+    ],
+    "short_review": [
+      ".z9E0IG"
+    ],
+    "description": [
+      ".ZmyHeo"
+    ],
+    "username": [
+      "._2NsDsF.AwS1CA"
+    ],
+    "date": [
+      ".row.gHqwa8"
+    ],
+    "read_more": [
+      "span.b4x-fr span"
+    ],
+    "keyword_chip": [
+      "span.AgRA\\+X"
+    ],
+    "keyword_positive": [
+      "span.WtBCuZ"
+    ],
+    "keyword_negative": [
+      "span._9VjbDx"
+    ]
+  }
+}

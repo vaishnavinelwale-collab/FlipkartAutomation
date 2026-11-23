@@ -1,0 +1,102 @@
+name: Flipkart review request
+
+on:
+  workflow_dispatch:
+    inputs:
+      REQUEST_ID:
+        description: Google Sheet request ID
+        required: true
+        type: string
+      PRODUCT_URL:
+        description: HTTPS Flipkart product URL
+        required: true
+        type: string
+      DURATION:
+        description: Review window length
+        required: true
+        type: string
+      DURATION_UNIT:
+        description: Review window unit
+        required: true
+        type: choice
+        options: [weeks, months, years]
+      RECIPIENT_EMAIL:
+        description: Recipient of the Excel report
+        required: true
+        type: string
+      START_DATE:
+        description: Inclusive start date (YYYY-MM-DD)
+        required: true
+        type: string
+      END_DATE:
+        description: Inclusive end date (YYYY-MM-DD)
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: flipkart-self-hosted-scraper
+  cancel-in-progress: false
+
+jobs:
+  scrape:
+    runs-on: [self-hosted, windows, x64]
+    timeout-minutes: 240
+    env:
+      PYTHONUNBUFFERED: "1"
+      PYTHONUTF8: "1"
+      FKART_HEADLESS: "1"
+      REQUEST_ID: ${{ inputs.REQUEST_ID }}
+      PRODUCT_URL: ${{ inputs.PRODUCT_URL }}
+      DURATION: ${{ inputs.DURATION }}
+      DURATION_UNIT: ${{ inputs.DURATION_UNIT }}
+      RECIPIENT_EMAIL: ${{ inputs.RECIPIENT_EMAIL }}
+      START_DATE: ${{ inputs.START_DATE }}
+      END_DATE: ${{ inputs.END_DATE }}
+      FKART_LOGIN_ID: ${{ secrets.FKART_LOGIN_ID }}
+      FKART_PASSWORD: ${{ secrets.FKART_PASSWORD }}
+      FKART_EMAIL: ${{ secrets.FKART_EMAIL }}
+      FKART_APP_PASSWORD: ${{ secrets.FKART_APP_PASSWORD }}
+      SMTP_USER: ${{ secrets.SMTP_USER }}
+      SMTP_APP_PASSWORD: ${{ secrets.SMTP_APP_PASSWORD }}
+      SMTP_SERVER: smtp.gmail.com
+      SMTP_PORT: "587"
+      ALERT_TO: ${{ secrets.ALERT_TO }}
+      SHEETS_CALLBACK_URL: ${{ secrets.SHEETS_CALLBACK_URL }}
+      SHEETS_CALLBACK_SECRET: ${{ secrets.SHEETS_CALLBACK_SECRET }}
+      BUILD_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+    defaults:
+      run:
+        shell: pwsh
+        working-directory: .
+    steps:
+      - name: Check out project
+        uses: actions/checkout@v4
+
+      - name: Keep Chrome profile outside the cleaned checkout
+        run: Add-Content $env:GITHUB_ENV "FKART_CHROME_PROFILE_DIR=$env:LOCALAPPDATA\FlipkartAutomation\ChromeProfile"
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+
+      - name: Run scraper and email report
+        run: python run_request.py --from-env
+
+      - name: Update Google Sheet
+        if: always()
+        run: python update_google_sheet.py
+
+      - name: Keep request status and report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: flipkart-${{ inputs.REQUEST_ID }}
+          path: |
+            reports/${{ inputs.REQUEST_ID }}/request_status.json
+            reports/${{ inputs.REQUEST_ID }}/*.xlsx
+          if-no-files-found: ignore
+          retention-days: 14
