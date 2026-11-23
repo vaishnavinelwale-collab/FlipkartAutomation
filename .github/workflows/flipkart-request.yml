@@ -42,7 +42,7 @@ concurrency:
 
 jobs:
   scrape:
-    runs-on: [self-hosted, windows, x64]
+    runs-on: windows-latest
     timeout-minutes: 240
     env:
       PYTHONUNBUFFERED: "1"
